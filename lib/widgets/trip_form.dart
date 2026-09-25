@@ -107,14 +107,14 @@ class _TripFormState extends State<TripForm> {
           label('ชื่อทริป'),
           TextFormField(
             controller: _name,
-            decoration: pillInput('ทริปพักผ่อน', padding: inputPad),
+            decoration: pillInput('', padding: inputPad),
             validator: requiredText,
           ),
           SizedBox(height: gap),
           label('เมือง/ประเทศ'),
           TextFormField(
             controller: _dest,
-            decoration: pillInput('โตเกียว, ญี่ปุ่น', padding: inputPad),
+            decoration: pillInput('', padding: inputPad),
             validator: requiredText,
           ),
           SizedBox(height: gap),
@@ -125,7 +125,6 @@ class _TripFormState extends State<TripForm> {
               Expanded(
                 child: _DateField(
                   value: _start,
-                  hint: '01/01/2570',
                   padding: inputPad,
                   onTap: () => _pickDate(isStart: true),
                   validator: () => _start == null ? 'เลือกวันเริ่ม' : null,
@@ -135,7 +134,6 @@ class _TripFormState extends State<TripForm> {
               Expanded(
                 child: _DateField(
                   value: _end,
-                  hint: '05/01/2570',
                   padding: inputPad,
                   onTap: () => _pickDate(isStart: false),
                   validator: () {
@@ -157,7 +155,7 @@ class _TripFormState extends State<TripForm> {
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'[\d,.]')),
             ],
-            decoration: pillInput('30,000', padding: inputPad),
+            decoration: pillInput('', padding: inputPad),
             validator: (v) {
               final n = double.tryParse((v ?? '').replaceAll(',', ''));
               return (n == null || n <= 0) ? 'กรุณากรอกงบประมาณ' : null;
@@ -189,7 +187,6 @@ class _TripFormState extends State<TripForm> {
 class _DateField extends FormField<DateTime> {
   _DateField({
     required DateTime? value,
-    required String hint,
     required VoidCallback onTap,
     required String? Function() validator,
     EdgeInsets? padding,
@@ -198,10 +195,10 @@ class _DateField extends FormField<DateTime> {
          builder: (state) => GestureDetector(
            onTap: onTap,
            child: InputDecorator(
-             decoration: pillInput(hint, padding: padding).copyWith(
-               errorText: state.errorText,
-               hintText: value == null ? hint : null,
-             ),
+             decoration: pillInput(
+               '',
+               padding: padding,
+             ).copyWith(errorText: state.errorText),
              isEmpty: value == null,
              child: Text(
                value == null ? '' : thaiNumericDate(value),

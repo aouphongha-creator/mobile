@@ -5,19 +5,12 @@ import 'repository.dart';
 
 /// Stores data in Supabase tables (see supabase/schema.sql).
 ///
-/// Each install signs in anonymously; Row Level Security limits every
-/// row to its owner, so devices only ever see their own trips.
+/// All devices share one dataset: no sign-in, the tables' RLS policies
+/// allow the publishable key to read and write every row.
 class SupabaseRepository extends Repository {
   SupabaseRepository(this._db);
 
   final SupabaseClient _db;
-
-  @override
-  Future<void> init() async {
-    if (_db.auth.currentSession == null) {
-      await _db.auth.signInAnonymously();
-    }
-  }
 
   @override
   Future<AppData> loadAll() async {
@@ -35,35 +28,27 @@ class SupabaseRepository extends Repository {
 
   @override
   Future<void> upsertTrip(Trip trip) =>
-      _write(() => _db.from('trips').upsert(_tripToRow(trip)));
+      _db.from('trips').upsert(_tripToRow(trip));
 
   /// Activities and expenses go with it via ON DELETE CASCADE.
   @override
-  Future<void> deleteTrip(String id) =>
-      _write(() => _db.from('trips').delete().eq('id', id));
+  Future<void> deleteTrip(String id) => _db.from('trips').delete().eq('id', id);
 
   @override
   Future<void> upsertActivity(Activity a) =>
-      _write(() => _db.from('activities').upsert(_activityToRow(a)));
+      _db.from('activities').upsert(_activityToRow(a));
 
   @override
   Future<void> deleteActivity(String id) =>
-      _write(() => _db.from('activities').delete().eq('id', id));
+      _db.from('activities').delete().eq('id', id);
 
   @override
   Future<void> upsertExpense(Expense e) =>
-      _write(() => _db.from('expenses').upsert(_expenseToRow(e)));
+      _db.from('expenses').upsert(_expenseToRow(e));
 
   @override
   Future<void> deleteExpense(String id) =>
-      _write(() => _db.from('expenses').delete().eq('id', id));
-
-  /// Signs in first if the startup sign-in failed (e.g. offline), so a
-  /// write never goes out without a user and gets rejected by RLS.
-  Future<void> _write(Future<void> Function() op) async {
-    await init();
-    await op();
-  }
+      _db.from('expenses').delete().eq('id', id);
 
   @override
   Future<void> insertAll(AppData data) async {

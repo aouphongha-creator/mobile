@@ -79,11 +79,8 @@ class AppState extends ChangeNotifier {
   /// Short Thai explanation of a repository error for the SnackBar.
   static String _describe(Object e) {
     final text = e.toString();
-    if (text.contains('anonymous_provider_disabled')) {
-      return 'ยังไม่ได้เปิด Anonymous sign-ins ใน Supabase';
-    }
     if (text.contains('row-level security')) {
-      return 'ไม่มีสิทธิ์เข้าถึงข้อมูล (ยังไม่ได้เข้าสู่ระบบ Supabase)';
+      return 'ไม่มีสิทธิ์เข้าถึงข้อมูล (รัน supabase/schema.sql ใหม่)';
     }
     if (text.contains('PGRST205')) return 'ยังไม่ได้สร้างตารางใน Supabase';
     if (e is TimeoutException) return 'เชื่อมต่อนานเกินไป';
