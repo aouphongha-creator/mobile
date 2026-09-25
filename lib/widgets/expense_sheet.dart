@@ -57,8 +57,10 @@ class _ExpenseSheetState extends State<_ExpenseSheet> {
   final _formKey = GlobalKey<FormState>();
   late final _title = TextEditingController(text: widget.expense?.title);
   late final _amount = TextEditingController(
-      text: widget.expense == null ? '' : money(widget.expense!.amount));
-  late ExpenseCategory _category = widget.expense?.category ?? ExpenseCategory.food;
+    text: widget.expense == null ? '' : money(widget.expense!.amount),
+  );
+  late ExpenseCategory _category =
+      widget.expense?.category ?? ExpenseCategory.food;
   late PaymentMethod _payment = widget.expense?.payment ?? PaymentMethod.cash;
   late DateTime _date;
   late int _minutes;
@@ -69,7 +71,9 @@ class _ExpenseSheetState extends State<_ExpenseSheet> {
     final days = widget.trip.days;
     final now = DateTime.now();
     final preferred = widget.expense?.date ?? widget.day ?? dateOnly(now);
-    _date = days.contains(dateOnly(preferred)) ? dateOnly(preferred) : days.first;
+    _date = days.contains(dateOnly(preferred))
+        ? dateOnly(preferred)
+        : days.first;
     _minutes = widget.expense?.minutes ?? now.hour * 60 + now.minute;
   }
 
@@ -124,9 +128,9 @@ class _ExpenseSheetState extends State<_ExpenseSheet> {
     final thb = (_amountValue ?? 0) * state.rateToThb(cur);
 
     Widget label(String t, {bool req = true}) => Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 6, top: 12),
-          child: FieldLabel(t, required: req),
-        );
+      padding: const EdgeInsets.only(left: 4, bottom: 6, top: 12),
+      child: FieldLabel(t, required: req),
+    );
 
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
@@ -143,41 +147,61 @@ class _ExpenseSheetState extends State<_ExpenseSheet> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                      color: AppColors.cardBorder, borderRadius: BorderRadius.circular(2)),
+                    color: AppColors.cardBorder,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
-              Row(children: [
-                Expanded(
-                  child: Text(
-                    widget.expense == null ? 'เพิ่มรายการค่าใช้จ่าย' : 'แก้ไขรายการค่าใช้จ่าย',
-                    style: const TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.w600, color: AppColors.navy),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.expense == null
+                          ? 'เพิ่มรายการค่าใช้จ่าย'
+                          : 'แก้ไขรายการค่าใช้จ่าย',
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.navy,
+                      ),
+                    ),
                   ),
-                ),
-                if (widget.expense != null)
-                  IconButton(
-                    tooltip: 'ลบรายการ',
-                    onPressed: _delete,
-                    icon: const Icon(Icons.delete_outline_rounded, color: AppColors.delete),
-                  ),
-              ]),
+                  if (widget.expense != null)
+                    IconButton(
+                      tooltip: 'ลบรายการ',
+                      onPressed: _delete,
+                      icon: const Icon(
+                        Icons.delete_outline_rounded,
+                        color: AppColors.delete,
+                      ),
+                    ),
+                ],
+              ),
               label('รายการ'),
               TextFormField(
                 controller: _title,
                 decoration: pillInput('ค่าอาหารมื้อเที่ยง'),
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? 'กรุณากรอกชื่อรายการ' : null,
+                validator: (v) => (v == null || v.trim().isEmpty)
+                    ? 'กรุณากรอกชื่อรายการ'
+                    : null,
               ),
               label('จำนวนเงิน ($cur)'),
               TextFormField(
                 controller: _amount,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d,.]'))],
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[\d,.]')),
+                ],
                 onChanged: (_) => setState(() {}),
                 decoration: pillInput('3,500').copyWith(
                   suffixText: cur,
-                  suffixStyle: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                  suffixStyle: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textMuted,
+                  ),
                 ),
                 validator: (v) {
                   final n = _amountValue;
@@ -190,38 +214,52 @@ class _ExpenseSheetState extends State<_ExpenseSheet> {
                   child: Text(
                     '≈ ${money(thb)} THB  (1 $cur = ${rate(state.rateToThb(cur))} THB)',
                     style: const TextStyle(
-                        fontSize: 12, color: AppColors.blue, fontWeight: FontWeight.w500),
+                      fontSize: 12,
+                      color: AppColors.blue,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                      label('หมวดหมู่'),
-                      PillDropdown<ExpenseCategory>(
-                        value: _category,
-                        height: 44,
-                        radius: 22,
-                        fontSize: 13,
-                        items: [for (final c in ExpenseCategory.values) (c, c.label)],
-                        onChanged: (v) => setState(() => _category = v),
-                      ),
-                    ]),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        label('หมวดหมู่'),
+                        PillDropdown<ExpenseCategory>(
+                          value: _category,
+                          height: 44,
+                          radius: 22,
+                          fontSize: 13,
+                          items: [
+                            for (final c in ExpenseCategory.values)
+                              (c, c.label),
+                          ],
+                          onChanged: (v) => setState(() => _category = v),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                      label('วิธีชำระ'),
-                      PillDropdown<PaymentMethod>(
-                        value: _payment,
-                        height: 44,
-                        radius: 22,
-                        fontSize: 13,
-                        items: [for (final p in PaymentMethod.values) (p, p.label)],
-                        onChanged: (v) => setState(() => _payment = v),
-                      ),
-                    ]),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        label('วิธีชำระ'),
+                        PillDropdown<PaymentMethod>(
+                          value: _payment,
+                          height: 44,
+                          radius: 22,
+                          fontSize: 13,
+                          items: [
+                            for (final p in PaymentMethod.values) (p, p.label),
+                          ],
+                          onChanged: (v) => setState(() => _payment = v),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -230,41 +268,52 @@ class _ExpenseSheetState extends State<_ExpenseSheet> {
                 children: [
                   Expanded(
                     flex: 3,
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                      label('วันที่'),
-                      PillDropdown<DateTime>(
-                        value: _date,
-                        height: 44,
-                        radius: 22,
-                        fontSize: 13,
-                        items: [
-                          for (final (i, d) in widget.trip.days.indexed)
-                            (d, 'Day ${i + 1} · ${thaiDate(d)}'),
-                        ],
-                        onChanged: (v) => setState(() => _date = v),
-                      ),
-                    ]),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        label('วันที่'),
+                        PillDropdown<DateTime>(
+                          value: _date,
+                          height: 44,
+                          radius: 22,
+                          fontSize: 13,
+                          items: [
+                            for (final (i, d) in widget.trip.days.indexed)
+                              (d, 'Day ${i + 1} · ${thaiDate(d)}'),
+                          ],
+                          onChanged: (v) => setState(() => _date = v),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     flex: 2,
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                      label('เวลา'),
-                      InkWell(
-                        onTap: _pickTime,
-                        borderRadius: BorderRadius.circular(22),
-                        child: InputDecorator(
-                          decoration: pillInput(''),
-                          child: Text('${hhmm(_minutes)} น.',
-                              style: const TextStyle(fontSize: 13)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        label('เวลา'),
+                        InkWell(
+                          onTap: _pickTime,
+                          borderRadius: BorderRadius.circular(22),
+                          child: InputDecorator(
+                            decoration: pillInput(''),
+                            child: Text(
+                              '${hhmm(_minutes)} น.',
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                          ),
                         ),
-                      ),
-                    ]),
+                      ],
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 24),
-              CancelSaveRow(onCancel: () => Navigator.of(context).pop(), onSave: _save),
+              CancelSaveRow(
+                onCancel: () => Navigator.of(context).pop(),
+                onSave: _save,
+              ),
             ],
           ),
         ),

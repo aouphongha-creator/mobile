@@ -40,7 +40,9 @@ class WeatherCard extends StatelessWidget {
     final weather = state.weatherFor(city);
     final loading = state.isWeatherLoading(city);
     if (weather == null && !loading) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => state.refreshWeather(city));
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => state.refreshWeather(city),
+      );
     }
 
     return Container(
@@ -55,23 +57,40 @@ class WeatherCard extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(6, 10, 6, 8),
-            child: Column(children: [
-              Text('อากาศวันนี้ $city',
-                  textAlign: TextAlign.center, style: _titleStyle),
-              const SizedBox(height: 4),
-              if (weather != null) ...[
-                Text('${weather.temp.round()}°C',
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                Text(weather.description, style: _smallStyle, textAlign: TextAlign.center),
-              ] else if (loading)
-                const Padding(
-                  padding: EdgeInsets.all(6),
-                  child: SizedBox(
-                      width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-                )
-              else
-                const Text('โหลดข้อมูลไม่ได้', style: _smallStyle),
-            ]),
+            child: Column(
+              children: [
+                Text(
+                  'อากาศวันนี้ $city',
+                  textAlign: TextAlign.center,
+                  style: _titleStyle,
+                ),
+                const SizedBox(height: 4),
+                if (weather != null) ...[
+                  Text(
+                    '${weather.temp.round()}°C',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    weather.description,
+                    style: _smallStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ] else if (loading)
+                  const Padding(
+                    padding: EdgeInsets.all(6),
+                    child: SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  )
+                else
+                  const Text('โหลดข้อมูลไม่ได้', style: _smallStyle),
+              ],
+            ),
           ),
           if (weather != null && weather.next.isNotEmpty)
             Container(
@@ -85,14 +104,24 @@ class WeatherCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: AppColors.cardBorder)),
+                        border: Border(
+                          bottom: BorderSide(color: AppColors.cardBorder),
+                        ),
                       ),
-                      child: Row(children: [
-                        Expanded(
-                            child: Text(thaiWeekdayDay(d.date),
-                                style: const TextStyle(fontSize: 10))),
-                        Text('${d.maxTemp.round()}°C', style: const TextStyle(fontSize: 10)),
-                      ]),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              thaiWeekdayDay(d.date),
+                              style: const TextStyle(fontSize: 10),
+                            ),
+                          ),
+                          Text(
+                            '${d.maxTemp.round()}°C',
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                        ],
+                      ),
                     ),
                 ],
               ),
@@ -122,27 +151,35 @@ class BudgetCard extends StatelessWidget {
           const Center(child: Text('สรุปงบประมาณ', style: _titleStyle)),
           const SizedBox(height: 4),
           const Text('ใช้ไปแล้ว', style: _smallStyle),
-          Text('${money(spent)} / ${money(budget)}',
-              style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: over ? AppColors.delete : AppColors.text)),
+          Text(
+            '${money(spent)} / ${money(budget)}',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: over ? AppColors.delete : AppColors.text,
+            ),
+          ),
           const SizedBox(height: 4),
-          Row(children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: ratio.clamp(0, 1),
-                  minHeight: 5,
-                  backgroundColor: AppColors.progressTrack,
-                  color: over ? AppColors.delete : AppColors.statusDone,
+          Row(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: ratio.clamp(0, 1),
+                    minHeight: 5,
+                    backgroundColor: AppColors.progressTrack,
+                    color: over ? AppColors.delete : AppColors.statusDone,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 4),
-            Text('${(ratio * 100).round()}%', style: const TextStyle(fontSize: 8)),
-          ]),
+              const SizedBox(width: 4),
+              Text(
+                '${(ratio * 100).round()}%',
+                style: const TextStyle(fontSize: 8),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -158,7 +195,9 @@ class RateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = AppScope.of(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) => state.refreshRate(currency));
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => state.refreshRate(currency),
+    );
     return _SideCard(
       border: AppColors.rateBorder,
       child: Column(

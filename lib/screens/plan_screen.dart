@@ -64,8 +64,10 @@ class _PlanScreenState extends State<PlanScreen> {
         title: 'แผนการเดินทาง',
         onBack: widget.onBack,
         child: const Center(
-          child: Text('ยังไม่มีทริป เพิ่มทริปได้ที่หน้า Home',
-              style: TextStyle(color: AppColors.textMuted)),
+          child: Text(
+            'ยังไม่มีทริป เพิ่มทริปได้ที่หน้า Home',
+            style: TextStyle(color: AppColors.textMuted),
+          ),
         ),
       );
     }
@@ -89,18 +91,34 @@ class _PlanScreenState extends State<PlanScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(trip.destination,
-                    style: const TextStyle(
-                        color: AppColors.navy, fontSize: 24, fontWeight: FontWeight.w600)),
-                Row(children: [
-                  const Icon(Icons.calendar_month_outlined, size: 14, color: AppColors.navy),
-                  const SizedBox(width: 4),
-                  Flexible(
-                    child: Text(thaiRange(trip.start, trip.end),
-                        style: const TextStyle(
-                            color: AppColors.navy, fontSize: 11, fontWeight: FontWeight.w600)),
+                Text(
+                  trip.destination,
+                  style: const TextStyle(
+                    color: AppColors.navy,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
                   ),
-                ]),
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.calendar_month_outlined,
+                      size: 14,
+                      color: AppColors.navy,
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        thaiRange(trip.start, trip.end),
+                        style: const TextStyle(
+                          color: AppColors.navy,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -126,9 +144,14 @@ class _PlanScreenState extends State<PlanScreen> {
                         if (activities.isEmpty && _formFor != _newKey)
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 24),
-                            child: Text('ยังไม่มีสถานที่ในวันนี้',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                            child: Text(
+                              'ยังไม่มีสถานที่ในวันนี้',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: AppColors.textMuted,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
                         for (final (i, a) in activities.indexed)
                           Padding(
@@ -139,12 +162,16 @@ class _PlanScreenState extends State<PlanScreen> {
                                     activity: a,
                                     tripId: trip.id,
                                     day: day,
-                                    onDone: () => setState(() => _formFor = null),
+                                    onDone: () =>
+                                        setState(() => _formFor = null),
                                   )
                                 : _ActivityCard(
                                     activity: a,
-                                    color: AppColors.timeBadges[i % AppColors.timeBadges.length],
-                                    onEdit: () => setState(() => _formFor = a.id),
+                                    color:
+                                        AppColors.timeBadges[i %
+                                            AppColors.timeBadges.length],
+                                    onEdit: () =>
+                                        setState(() => _formFor = a.id),
                                     onDelete: () => _delete(a),
                                     onPickImage: () => _pickImage(a),
                                   ),
@@ -160,7 +187,9 @@ class _PlanScreenState extends State<PlanScreen> {
                             ),
                           )
                         else
-                          _AddPlaceButton(onTap: () => setState(() => _formFor = _newKey)),
+                          _AddPlaceButton(
+                            onTap: () => setState(() => _formFor = _newKey),
+                          ),
                       ],
                     ),
                   ),
@@ -171,7 +200,10 @@ class _PlanScreenState extends State<PlanScreen> {
                       children: [
                         WeatherCard(city: trip.city),
                         const SizedBox(height: 10),
-                        BudgetCard(spent: state.spentThb(trip), budget: trip.budget),
+                        BudgetCard(
+                          spent: state.spentThb(trip),
+                          budget: trip.budget,
+                        ),
                         const SizedBox(height: 10),
                         RateCard(currency: trip.currency),
                       ],
@@ -188,7 +220,11 @@ class _PlanScreenState extends State<PlanScreen> {
 }
 
 class _DayTabs extends StatelessWidget {
-  const _DayTabs({required this.days, required this.selected, required this.onSelect});
+  const _DayTabs({
+    required this.days,
+    required this.selected,
+    required this.onSelect,
+  });
 
   final List<DateTime> days;
   final int selected;
@@ -199,41 +235,50 @@ class _DayTabs extends StatelessWidget {
     return Container(
       color: AppColors.navy,
       height: 66,
-      child: LayoutBuilder(builder: (context, c) {
-        final tabWidth = c.maxWidth / 3;
-        return ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: days.length,
-          itemBuilder: (_, i) {
-            final active = i == selected;
-            return InkWell(
-              onTap: () => onSelect(i),
-              child: SizedBox(
-                width: tabWidth,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Day ${i + 1}',
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final tabWidth = c.maxWidth / 3;
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: days.length,
+            itemBuilder: (_, i) {
+              final active = i == selected;
+              return InkWell(
+                onTap: () => onSelect(i),
+                child: SizedBox(
+                  width: tabWidth,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Day ${i + 1}',
                         style: TextStyle(
-                            color: active ? Colors.white : Colors.white70,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600)),
-                    Text(enShortDate(days[i]),
+                          color: active ? Colors.white : Colors.white70,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        enShortDate(days[i]),
                         style: TextStyle(
-                            color: active ? Colors.white70 : Colors.white54, fontSize: 12)),
-                    const SizedBox(height: 6),
-                    Container(
-                      height: 3,
-                      width: tabWidth * 0.62,
-                      color: active ? AppColors.blue : Colors.transparent,
-                    ),
-                  ],
+                          color: active ? Colors.white70 : Colors.white54,
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Container(
+                        height: 3,
+                        width: tabWidth * 0.62,
+                        color: active ? AppColors.blue : Colors.transparent,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        );
-      }),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
@@ -261,11 +306,14 @@ class _ActivityCard extends StatelessWidget {
       badge: Pill(
         color: color,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          const Icon(Icons.access_time, size: 11, color: Colors.white),
-          const SizedBox(width: 3),
-          Text(hhmm(a.minutes), style: const TextStyle(fontSize: 10)),
-        ]),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.access_time, size: 11, color: Colors.white),
+            const SizedBox(width: 3),
+            Text(hhmm(a.minutes), style: const TextStyle(fontSize: 10)),
+          ],
+        ),
       ),
       child: Stack(
         clipBehavior: Clip.none,
@@ -273,7 +321,11 @@ class _ActivityCard extends StatelessWidget {
           Positioned(
             top: -8,
             right: 0,
-            child: EditDeleteActions(onEdit: onEdit, onDelete: onDelete, size: 15),
+            child: EditDeleteActions(
+              onEdit: onEdit,
+              onDelete: onDelete,
+              size: 15,
+            ),
           ),
           Row(
             children: [
@@ -287,8 +339,11 @@ class _ActivityCard extends StatelessWidget {
                     child: a.imagePath == null
                         ? const ColoredBox(
                             color: AppColors.placeholder,
-                            child: Icon(Icons.add_photo_alternate_outlined,
-                                color: Colors.white, size: 18),
+                            child: Icon(
+                              Icons.add_photo_alternate_outlined,
+                              color: Colors.white,
+                              size: 18,
+                            ),
                           )
                         : LocalImage(a.imagePath!),
                   ),
@@ -300,11 +355,21 @@ class _ActivityCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 14),
-                    Text(a.name,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                    Text(
+                      a.name,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     if (a.note.isNotEmpty)
-                      Text('•  ${a.note}',
-                          style: const TextStyle(fontSize: 10, color: AppColors.textMuted)),
+                      Text(
+                        '•  ${a.note}',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -335,9 +400,14 @@ class _AddPlaceButton extends StatelessWidget {
         child: const SizedBox(
           height: 34,
           child: Center(
-            child: Text('+ เพิ่มสถานที่ในวันนี้',
-                style: TextStyle(
-                    fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.navy)),
+            child: Text(
+              '+ เพิ่มสถานที่ในวันนี้',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: AppColors.navy,
+              ),
+            ),
           ),
         ),
       ),
@@ -371,7 +441,8 @@ class _ActivityFormState extends State<ActivityForm> {
   late final _name = TextEditingController(text: widget.activity?.name);
   late final _note = TextEditingController(text: widget.activity?.note);
   late final _time = TextEditingController(
-      text: widget.activity == null ? '' : hhmm(widget.activity!.minutes));
+    text: widget.activity == null ? '' : hhmm(widget.activity!.minutes),
+  );
 
   @override
   void dispose() {
@@ -409,9 +480,9 @@ class _ActivityFormState extends State<ActivityForm> {
 
   InputDecoration _box(String hint) {
     OutlineInputBorder b(Color c) => OutlineInputBorder(
-          borderRadius: BorderRadius.circular(4),
-          borderSide: BorderSide(color: c),
-        );
+      borderRadius: BorderRadius.circular(4),
+      borderSide: BorderSide(color: c),
+    );
     return InputDecoration(
       hintText: hint,
       hintStyle: const TextStyle(fontSize: 10, color: AppColors.hint),
@@ -427,7 +498,8 @@ class _ActivityFormState extends State<ActivityForm> {
   @override
   Widget build(BuildContext context) {
     const fieldStyle = TextStyle(fontSize: 11);
-    String? required(String? v) => (v == null || v.trim().isEmpty) ? 'จำเป็น' : null;
+    String? required(String? v) =>
+        (v == null || v.trim().isEmpty) ? 'จำเป็น' : null;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 12),
@@ -441,39 +513,49 @@ class _ActivityFormState extends State<ActivityForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(widget.title, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
+            Text(
+              widget.title,
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+            ),
             const SizedBox(height: 8),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   flex: 6,
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    const FieldLabel('ชื่อสถานที่', fontSize: 11),
-                    const SizedBox(height: 3),
-                    TextFormField(
-                      controller: _name,
-                      style: fieldStyle,
-                      decoration: _box('วัดเซ็นโซจิ'),
-                      validator: required,
-                    ),
-                  ]),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const FieldLabel('ชื่อสถานที่', fontSize: 11),
+                      const SizedBox(height: 3),
+                      TextFormField(
+                        controller: _name,
+                        style: fieldStyle,
+                        decoration: _box('วัดเซ็นโซจิ'),
+                        validator: required,
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   flex: 4,
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    const FieldLabel('เวลา', fontSize: 11),
-                    const SizedBox(height: 3),
-                    TextFormField(
-                      controller: _time,
-                      style: fieldStyle,
-                      readOnly: true,
-                      onTap: _pickTime,
-                      decoration: _box('09:00 น.'),
-                      validator: (v) => parseTime(v ?? '') == null ? 'จำเป็น' : null,
-                    ),
-                  ]),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const FieldLabel('เวลา', fontSize: 11),
+                      const SizedBox(height: 3),
+                      TextFormField(
+                        controller: _time,
+                        style: fieldStyle,
+                        readOnly: true,
+                        onTap: _pickTime,
+                        decoration: _box('09:00 น.'),
+                        validator: (v) =>
+                            parseTime(v ?? '') == null ? 'จำเป็น' : null,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

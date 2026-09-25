@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'app/supabase_config.dart';
 import 'app/theme.dart';
 import 'screens/main_shell.dart';
 import 'screens/splash_screen.dart';
+import 'services/repository.dart';
+import 'services/supabase_repository.dart';
 import 'state/app_state.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(JournyApp(state: AppState()));
+
+  // Cloud storage when a Supabase URL is configured, otherwise on-device.
+  Repository repository = LocalRepository();
+  if (useSupabase) {
+    await Supabase.initialize(url: supabaseUrl, publishableKey: supabaseKey);
+    repository = SupabaseRepository(Supabase.instance.client);
+  }
+
+  runApp(JournyApp(state: AppState(repository: repository)));
 }
 
 class JournyApp extends StatefulWidget {
-  const JournyApp({super.key, required this.state, this.splashDuration = const Duration(milliseconds: 1500)});
+  const JournyApp({
+    super.key,
+    required this.state,
+    this.splashDuration = const Duration(milliseconds: 1500),
+  });
 
   final AppState state;
   final Duration splashDuration;

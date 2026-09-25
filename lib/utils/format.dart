@@ -1,13 +1,33 @@
 const _thaiMonths = [
-  'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
-  'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม',
+  'มกราคม',
+  'กุมภาพันธ์',
+  'มีนาคม',
+  'เมษายน',
+  'พฤษภาคม',
+  'มิถุนายน',
+  'กรกฎาคม',
+  'สิงหาคม',
+  'กันยายน',
+  'ตุลาคม',
+  'พฤศจิกายน',
+  'ธันวาคม',
 ];
 
 const _thaiWeekdaysShort = ['จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.', 'อา.'];
 
 const _enMonthsShort = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ];
 
 DateTime dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
@@ -15,7 +35,8 @@ DateTime dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 int buddhistYear(DateTime d) => d.year + 543;
 
 /// 10 กันยายน 2569
-String thaiDate(DateTime d) => '${d.day} ${_thaiMonths[d.month - 1]} ${buddhistYear(d)}';
+String thaiDate(DateTime d) =>
+    '${d.day} ${_thaiMonths[d.month - 1]} ${buddhistYear(d)}';
 
 /// 10 กันยายน 2569 - 15 กันยายน 2569
 String thaiRange(DateTime a, DateTime b) => '${thaiDate(a)} - ${thaiDate(b)}';
@@ -25,7 +46,8 @@ String thaiNumericDate(DateTime d) =>
     '${_two(d.day)}/${_two(d.month)}/${buddhistYear(d)}';
 
 /// ศ. 11
-String thaiWeekdayDay(DateTime d) => '${_thaiWeekdaysShort[d.weekday - 1]} ${d.day}';
+String thaiWeekdayDay(DateTime d) =>
+    '${_thaiWeekdaysShort[d.weekday - 1]} ${d.day}';
 
 /// Oct 10
 String enShortDate(DateTime d) => '${_enMonthsShort[d.month - 1]} ${d.day}';

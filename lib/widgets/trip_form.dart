@@ -11,7 +11,12 @@ import 'ui.dart';
 /// Create/edit trip form. Used full-screen for new trips and expanded
 /// in place inside a trip card for edits.
 class TripForm extends StatefulWidget {
-  const TripForm({super.key, this.trip, required this.onDone, this.compact = false});
+  const TripForm({
+    super.key,
+    this.trip,
+    required this.onDone,
+    this.compact = false,
+  });
 
   final Trip? trip;
   final VoidCallback onDone;
@@ -28,7 +33,8 @@ class _TripFormState extends State<TripForm> {
   late final _name = TextEditingController(text: widget.trip?.name);
   late final _dest = TextEditingController(text: widget.trip?.destination);
   late final _budget = TextEditingController(
-      text: widget.trip == null ? '' : money(widget.trip!.budget));
+    text: widget.trip == null ? '' : money(widget.trip!.budget),
+  );
   late DateTime? _start = widget.trip?.start;
   late DateTime? _end = widget.trip?.end;
   late String _currency = widget.trip?.currency ?? 'JPY';
@@ -85,9 +91,9 @@ class _TripFormState extends State<TripForm> {
         : null;
 
     Widget label(String t) => Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 6),
-          child: FieldLabel(t, fontSize: labelSize),
-        );
+      padding: const EdgeInsets.only(left: 4, bottom: 6),
+      child: FieldLabel(t, fontSize: labelSize),
+    );
 
     String? requiredText(String? v) =>
         (v == null || v.trim().isEmpty) ? 'กรุณากรอกข้อมูล' : null;
@@ -148,7 +154,9 @@ class _TripFormState extends State<TripForm> {
           TextFormField(
             controller: _budget,
             keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d,.]'))],
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[\d,.]')),
+            ],
             decoration: pillInput('30,000', padding: inputPad),
             validator: (v) {
               final n = double.tryParse((v ?? '').replaceAll(',', ''));
@@ -186,20 +194,22 @@ class _DateField extends FormField<DateTime> {
     required String? Function() validator,
     EdgeInsets? padding,
   }) : super(
-          validator: (_) => validator(),
-          builder: (state) => GestureDetector(
-            onTap: onTap,
-            child: InputDecorator(
-              decoration: pillInput(hint, padding: padding).copyWith(
-                errorText: state.errorText,
-                hintText: value == null ? hint : null,
-              ),
-              isEmpty: value == null,
-              child: Text(value == null ? '' : thaiNumericDate(value),
-                  style: const TextStyle(fontSize: 13)),
-            ),
-          ),
-        );
+         validator: (_) => validator(),
+         builder: (state) => GestureDetector(
+           onTap: onTap,
+           child: InputDecorator(
+             decoration: pillInput(hint, padding: padding).copyWith(
+               errorText: state.errorText,
+               hintText: value == null ? hint : null,
+             ),
+             isEmpty: value == null,
+             child: Text(
+               value == null ? '' : thaiNumericDate(value),
+               style: const TextStyle(fontSize: 13),
+             ),
+           ),
+         ),
+       );
 }
 
 /// Full-screen "เพิ่มทริปใหม่" page.

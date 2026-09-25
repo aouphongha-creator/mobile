@@ -24,6 +24,16 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
+    final error = AppScope.of(context).takeSyncError();
+    if (error != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error)));
+      });
+    }
+
     return Scaffold(
       body: IndexedStack(
         index: _index,
@@ -73,14 +83,19 @@ class _BottomBar extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(icon,
-                            size: 26,
-                            color: i == index ? AppColors.blue : AppColors.navy),
+                        Icon(
+                          icon,
+                          size: 26,
+                          color: i == index ? AppColors.blue : AppColors.navy,
+                        ),
                         const SizedBox(height: 4),
-                        Text(label,
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: i == index ? AppColors.blue : AppColors.navy)),
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: i == index ? AppColors.blue : AppColors.navy,
+                          ),
+                        ),
                       ],
                     ),
                   ),

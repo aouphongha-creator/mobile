@@ -28,7 +28,7 @@ class Weather {
 /// Open-Meteo (free, no key) so the widget still works out of the box.
 class WeatherService {
   WeatherService({http.Client? client, this.apiKey = ''})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final http.Client _client;
   final String apiKey;
@@ -43,8 +43,13 @@ class WeatherService {
 
   Future<Weather?> _fetchOpenWeather(String city) async {
     try {
-      final geo = await _getJsonList(Uri.https('api.openweathermap.org', '/geo/1.0/direct',
-          {'q': city, 'limit': '1', 'appid': apiKey}));
+      final geo = await _getJsonList(
+        Uri.https('api.openweathermap.org', '/geo/1.0/direct', {
+          'q': city,
+          'limit': '1',
+          'appid': apiKey,
+        }),
+      );
       if (geo.isEmpty) return null;
       final place = geo.first as Map<String, dynamic>;
       final coords = {
@@ -55,28 +60,38 @@ class WeatherService {
         'appid': apiKey,
       };
 
-      final current =
-          await _getJson(Uri.https('api.openweathermap.org', '/data/2.5/weather', coords));
-      final forecast =
-          await _getJson(Uri.https('api.openweathermap.org', '/data/2.5/forecast', coords));
+      final current = await _getJson(
+        Uri.https('api.openweathermap.org', '/data/2.5/weather', coords),
+      );
+      final forecast = await _getJson(
+        Uri.https('api.openweathermap.org', '/data/2.5/forecast', coords),
+      );
 
       // Forecast comes in 3-hour slots; keep the max temperature per day.
       final today = DateTime.now();
       final maxByDay = <DateTime, double>{};
-      for (final slot in (forecast['list'] as List).cast<Map<String, dynamic>>()) {
-        final t = DateTime.fromMillisecondsSinceEpoch((slot['dt'] as int) * 1000);
+      for (final slot
+          in (forecast['list'] as List).cast<Map<String, dynamic>>()) {
+        final t = DateTime.fromMillisecondsSinceEpoch(
+          (slot['dt'] as int) * 1000,
+        );
         final day = DateTime(t.year, t.month, t.day);
-        if (!day.isAfter(DateTime(today.year, today.month, today.day))) continue;
+        if (!day.isAfter(DateTime(today.year, today.month, today.day))) {
+          continue;
+        }
         final temp = ((slot['main'] as Map)['temp_max'] as num).toDouble();
         maxByDay[day] = max(maxByDay[day] ?? temp, temp);
       }
       final days = maxByDay.keys.toList()..sort();
 
-      final weatherList = (current['weather'] as List).cast<Map<String, dynamic>>();
+      final weatherList = (current['weather'] as List)
+          .cast<Map<String, dynamic>>();
       return Weather(
         city: city,
         temp: ((current['main'] as Map)['temp'] as num).toDouble(),
-        description: weatherList.isEmpty ? '-' : weatherList.first['description'] as String,
+        description: weatherList.isEmpty
+            ? '-'
+            : weatherList.first['description'] as String,
         next: [for (final d in days.take(3)) DailyTemp(d, maxByDay[d]!)],
       );
     } catch (_) {
@@ -86,23 +101,27 @@ class WeatherService {
 
   Future<Weather?> _fetchOpenMeteo(String city) async {
     try {
-      final geo = await _getJson(Uri.https('geocoding-api.open-meteo.com', '/v1/search', {
-        'name': city,
-        'count': '1',
-        'language': 'th',
-      }));
+      final geo = await _getJson(
+        Uri.https('geocoding-api.open-meteo.com', '/v1/search', {
+          'name': city,
+          'count': '1',
+          'language': 'th',
+        }),
+      );
       final results = geo['results'] as List?;
       if (results == null || results.isEmpty) return null;
       final place = results.first as Map<String, dynamic>;
 
-      final data = await _getJson(Uri.https('api.open-meteo.com', '/v1/forecast', {
-        'latitude': '${place['latitude']}',
-        'longitude': '${place['longitude']}',
-        'current': 'temperature_2m,weather_code',
-        'daily': 'temperature_2m_max',
-        'timezone': 'auto',
-        'forecast_days': '4',
-      }));
+      final data = await _getJson(
+        Uri.https('api.open-meteo.com', '/v1/forecast', {
+          'latitude': '${place['latitude']}',
+          'longitude': '${place['longitude']}',
+          'current': 'temperature_2m,weather_code',
+          'daily': 'temperature_2m_max',
+          'timezone': 'auto',
+          'forecast_days': '4',
+        }),
+      );
       final current = data['current'] as Map<String, dynamic>;
       final daily = data['daily'] as Map<String, dynamic>;
       final dates = (daily['time'] as List).cast<String>();

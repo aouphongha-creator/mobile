@@ -52,15 +52,25 @@ class NavyPage extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Text(title,
-                      style: const TextStyle(
-                          color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   if (showBack || onBack != null)
                     Positioned(
                       left: 4,
                       child: IconButton(
-                        onPressed: onBack ?? () => Navigator.of(context).maybePop(),
-                        icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                        onPressed:
+                            onBack ?? () => Navigator.of(context).maybePop(),
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 24,
+                        ),
                       ),
                     ),
                   if (showProfile)
@@ -71,8 +81,11 @@ class NavyPage extends StatelessWidget {
                         onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute(builder: (_) => const InfoScreen()),
                         ),
-                        icon: const Icon(Icons.account_circle_outlined,
-                            color: Colors.white, size: 32),
+                        icon: const Icon(
+                          Icons.account_circle_outlined,
+                          color: Colors.white,
+                          size: 32,
+                        ),
                       ),
                     ),
                 ],
@@ -86,7 +99,10 @@ class NavyPage extends StatelessWidget {
                 ),
               )
             else
-              Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: panel),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: panel,
+              ),
           ],
         ),
       ),
@@ -105,11 +121,20 @@ class PanelHeading extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.format_list_bulleted_rounded, color: AppColors.navy, size: 22),
+        const Icon(
+          Icons.format_list_bulleted_rounded,
+          color: AppColors.navy,
+          size: 22,
+        ),
         const SizedBox(width: 4),
-        Text(text,
-            style: const TextStyle(
-                color: AppColors.navy, fontSize: 18, fontWeight: FontWeight.w600)),
+        Text(
+          text,
+          style: const TextStyle(
+            color: AppColors.navy,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
@@ -147,7 +172,9 @@ class BadgeCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: badge == null ? padding : padding.copyWith(top: padding.top + 10),
+          padding: badge == null
+              ? padding
+              : padding.copyWith(top: padding.top + 10),
           child: child,
         ),
       ),
@@ -182,10 +209,16 @@ class Pill extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: padding,
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: DefaultTextStyle.merge(
         style: const TextStyle(
-            color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+          color: Colors.white,
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+        ),
         child: child,
       ),
     );
@@ -194,7 +227,12 @@ class Pill extends StatelessWidget {
 
 /// Green pencil + red bin shown at the top-right of cards.
 class EditDeleteActions extends StatelessWidget {
-  const EditDeleteActions({super.key, this.onEdit, this.onDelete, this.size = 18});
+  const EditDeleteActions({
+    super.key,
+    this.onEdit,
+    this.onDelete,
+    this.size = 18,
+  });
 
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
@@ -206,22 +244,32 @@ class EditDeleteActions extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (onEdit != null)
-          _SmallIcon(icon: Icons.edit, color: AppColors.edit, size: size, onTap: onEdit!),
+          _SmallIcon(
+            icon: Icons.edit,
+            color: AppColors.edit,
+            size: size,
+            onTap: onEdit!,
+          ),
         if (onEdit != null && onDelete != null) SizedBox(width: size * 0.4),
         if (onDelete != null)
           _SmallIcon(
-              icon: Icons.delete_outline_rounded,
-              color: AppColors.delete,
-              size: size,
-              onTap: onDelete!),
+            icon: Icons.delete_outline_rounded,
+            color: AppColors.delete,
+            size: size,
+            onTap: onDelete!,
+          ),
       ],
     );
   }
 }
 
 class _SmallIcon extends StatelessWidget {
-  const _SmallIcon(
-      {required this.icon, required this.color, required this.size, required this.onTap});
+  const _SmallIcon({
+    required this.icon,
+    required this.color,
+    required this.size,
+    required this.onTap,
+  });
 
   final IconData icon;
   final Color color;
@@ -258,7 +306,9 @@ class AddFab extends StatelessWidget {
       ),
       child: Material(
         color: AppColors.blue,
-        shape: const CircleBorder(side: BorderSide(color: Colors.white, width: 2)),
+        shape: const CircleBorder(
+          side: BorderSide(color: Colors.white, width: 2),
+        ),
         child: InkWell(
           customBorder: const CircleBorder(),
           onTap: onTap,
@@ -382,9 +432,14 @@ class _ToneButton extends StatelessWidget {
         child: SizedBox(
           height: height,
           child: Center(
-            child: Text(label,
-                style: TextStyle(
-                    fontSize: fontSize, fontWeight: FontWeight.w500, color: AppColors.text)),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.w500,
+                color: AppColors.text,
+              ),
+            ),
           ),
         ),
       ),
@@ -394,7 +449,12 @@ class _ToneButton extends StatelessWidget {
 
 /// Label with a red asterisk, e.g. "ชื่อทริป *".
 class FieldLabel extends StatelessWidget {
-  const FieldLabel(this.text, {super.key, this.required = true, this.fontSize = 13});
+  const FieldLabel(
+    this.text, {
+    super.key,
+    this.required = true,
+    this.fontSize = 13,
+  });
 
   final String text;
   final bool required;
@@ -403,28 +463,42 @@ class FieldLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text.rich(
-      TextSpan(children: [
-        TextSpan(text: text),
-        if (required)
-          const TextSpan(text: ' *', style: TextStyle(color: Color(0xFFE53935))),
-      ]),
-      style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w600, color: AppColors.text),
+      TextSpan(
+        children: [
+          TextSpan(text: text),
+          if (required)
+            const TextSpan(
+              text: ' *',
+              style: TextStyle(color: Color(0xFFE53935)),
+            ),
+        ],
+      ),
+      style: TextStyle(
+        fontSize: fontSize,
+        fontWeight: FontWeight.w600,
+        color: AppColors.text,
+      ),
     );
   }
 }
 
-InputDecoration pillInput(String hint, {double radius = 22, EdgeInsets? padding}) {
+InputDecoration pillInput(
+  String hint, {
+  double radius = 22,
+  EdgeInsets? padding,
+}) {
   OutlineInputBorder border(Color c) => OutlineInputBorder(
-        borderRadius: BorderRadius.circular(radius),
-        borderSide: BorderSide(color: c, width: 1.2),
-      );
+    borderRadius: BorderRadius.circular(radius),
+    borderSide: BorderSide(color: c, width: 1.2),
+  );
   return InputDecoration(
     hintText: hint,
     hintStyle: const TextStyle(color: AppColors.hint, fontSize: 13),
     isDense: true,
     filled: true,
     fillColor: Colors.white,
-    contentPadding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    contentPadding:
+        padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     border: border(AppColors.inputBorder),
     enabledBorder: border(AppColors.inputBorder),
     focusedBorder: border(AppColors.blue),
@@ -471,12 +545,16 @@ class PillDropdown<T> extends StatelessWidget {
           value: value,
           isExpanded: true,
           isDense: true,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.text),
+          icon: const Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: AppColors.text,
+          ),
           style: TextStyle(
-              fontSize: fontSize,
-              color: AppColors.text,
-              fontFamily: AppTheme.fontFamily,
-              fontFamilyFallback: AppTheme.fontFallback),
+            fontSize: fontSize,
+            color: AppColors.text,
+            fontFamily: AppTheme.fontFamily,
+            fontFamilyFallback: AppTheme.fontFallback,
+          ),
           borderRadius: BorderRadius.circular(12),
           items: [
             for (final (v, label) in items)
@@ -501,7 +579,10 @@ Future<bool> confirmDelete(BuildContext context, String what) async {
       title: const Text('ยืนยันการลบ'),
       content: Text('ต้องการลบ "$what" ใช่หรือไม่?'),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('ยกเลิก')),
+        TextButton(
+          onPressed: () => Navigator.pop(ctx, false),
+          child: const Text('ยกเลิก'),
+        ),
         TextButton(
           onPressed: () => Navigator.pop(ctx, true),
           child: const Text('ลบ', style: TextStyle(color: AppColors.delete)),

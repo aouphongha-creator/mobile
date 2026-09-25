@@ -76,7 +76,9 @@ class AppTheme {
         headerBackgroundColor: AppColors.navy,
         headerForegroundColor: Colors.white,
       ),
-      snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
+      snackBarTheme: const SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+      ),
     );
   }
 }

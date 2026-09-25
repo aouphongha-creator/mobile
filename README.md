@@ -14,6 +14,13 @@
 - [OpenWeatherMap](https://openweathermap.org/api) — สภาพอากาศ (ใส่ API key ตอนรัน)
 - [Open-Meteo](https://open-meteo.com/) — สภาพอากาศสำรอง ไม่ต้องใช้ key
 - [ExchangeRate-API](https://www.exchangerate-api.com/) — อัตราแลกเปลี่ยน
+- [Supabase](https://supabase.com/) — ฐานข้อมูล (ไม่ต้องล็อกอิน ใช้ Anonymous sign-in)
+
+## ตั้งค่า Supabase
+
+1. เปิด SQL Editor ใน Supabase แล้วรันไฟล์ [`supabase/schema.sql`](supabase/schema.sql)
+2. เปิด Authentication → Sign In / Providers → **Allow anonymous sign-ins**
+3. ใส่ Project URL ใน `lib/app/supabase_config.dart` (ถ้าเว้นว่าง แอปจะเก็บข้อมูลในเครื่องแทน)
 
 ## วิธีรัน
 

@@ -20,26 +20,31 @@ class InfoScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const _Label('รายวิชา'),
-            _InfoCard(rows: const [
-              (null, AppInfo.courseName),
-              ('รหัสวิชา:', AppInfo.courseCode),
-              ('หมู่เรียน:', AppInfo.section),
-            ]),
+            _InfoCard(
+              rows: const [
+                (null, AppInfo.courseName),
+                ('รหัสวิชา:', AppInfo.courseCode),
+                ('หมู่เรียน:', AppInfo.section),
+              ],
+            ),
             const SizedBox(height: 14),
             const _Label('สมาชิก'),
             for (final (i, m) in AppInfo.members.indexed) ...[
-              _InfoCard(rows: [
-                ('สมาชิกคนที่ ${i + 1}:', m.name),
-                ('รหัสนิสิต:', m.studentId),
-                ('เลขที่:', m.number),
-              ]),
+              _InfoCard(
+                rows: [
+                  ('สมาชิกคนที่ ${i + 1}:', m.name),
+                  ('รหัสนิสิต:', m.studentId),
+                  ('เลขที่:', m.number),
+                ],
+              ),
               const SizedBox(height: 6),
             ],
             const SizedBox(height: 8),
             const _Label('External APIs'),
-            _InfoCard(labelWidth: 140, rows: [
-              for (final api in AppInfo.apis) ('${api.name}:', api.use),
-            ]),
+            _InfoCard(
+              labelWidth: 140,
+              rows: [for (final api in AppInfo.apis) ('${api.name}:', api.use)],
+            ),
           ],
         ),
       ),
@@ -54,10 +59,12 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(left: 12, bottom: 4),
-        child: Text(text,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-      );
+    padding: const EdgeInsets.only(left: 12, bottom: 4),
+    child: Text(
+      text,
+      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+    ),
+  );
 }
 
 class _InfoCard extends StatelessWidget {
@@ -82,18 +89,34 @@ class _InfoCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 2),
               child: label == null
-                  ? Text(value, style: const TextStyle(fontSize: 12, color: AppColors.textMuted))
+                  ? Text(
+                      value,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textMuted,
+                      ),
+                    )
                   : Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           width: labelWidth,
-                          child: Text(label,
-                              style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                          child: Text(
+                            label,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: AppColors.textMuted,
+                            ),
+                          ),
                         ),
                         Expanded(
-                          child: Text(value,
-                              style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                          child: Text(
+                            value,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: AppColors.textMuted,
+                            ),
+                          ),
                         ),
                       ],
                     ),

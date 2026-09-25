@@ -9,22 +9,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile/main.dart';
 import 'package:mobile/models/models.dart';
 import 'package:mobile/services/remote.dart';
+import 'package:mobile/services/repository.dart';
 import 'package:mobile/state/app_state.dart';
 
 final _offline = MockClient((_) async => http.Response('offline', 503));
 final _fixedNow = DateTime(2026, 9, 25, 10);
 
 AppState _state() => AppState(
-      weather: WeatherService(client: _offline),
-      exchange: ExchangeService(_offline),
-      clock: () => _fixedNow,
-    );
+  weather: WeatherService(client: _offline),
+  exchange: ExchangeService(_offline),
+  clock: () => _fixedNow,
+);
 
 Future<void> _pumpApp(WidgetTester tester, AppState state) async {
   tester.view.physicalSize = const Size(390, 844);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
-  await tester.pumpWidget(JournyApp(state: state, splashDuration: Duration.zero));
+  await tester.pumpWidget(
+    JournyApp(state: state, splashDuration: Duration.zero),
+  );
   await tester.pumpAndSettle();
 }
 
@@ -41,7 +44,9 @@ void main() {
     expect(find.text('จบแล้ว'), findsOneWidget);
   });
 
-  testWidgets('tapping a trip opens its plan on the Detail tab', (tester) async {
+  testWidgets('tapping a trip opens its plan on the Detail tab', (
+    tester,
+  ) async {
     await _pumpApp(tester, _state());
 
     await tester.tap(find.text('ทริปเที่ยวโตเกียว กับครอบครัว'));
@@ -61,8 +66,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('บันทึก'), findsOneWidget);
-    expect(find.widgetWithText(TextFormField, 'ทริปเที่ยวโตเกียว กับครอบครัว'),
-        findsOneWidget);
+    expect(
+      find.widgetWithText(TextFormField, 'ทริปเที่ยวโตเกียว กับครอบครัว'),
+      findsOneWidget,
+    );
   });
 
   test('trip status follows the dates', () {
@@ -94,7 +101,11 @@ void main() {
       currency: 'JPY',
     );
     await state.saveActivity(
-        tripId: trip.id, date: DateTime(2026, 10, 1), minutes: 600, name: 'พระราชวัง');
+      tripId: trip.id,
+      date: DateTime(2026, 10, 1),
+      minutes: 600,
+      name: 'พระราชวัง',
+    );
     await state.saveExpense(
       tripId: trip.id,
       date: DateTime(2026, 10, 1),
@@ -118,30 +129,77 @@ void main() {
     expect(reloaded.activitiesOn(trip.id, DateTime(2026, 10, 1)), isEmpty);
   });
 
+  test('failed saves keep the optimistic change and report an error', () async {
+    final state = AppState(
+      repository: _FailingRepository(),
+      weather: WeatherService(client: _offline),
+      exchange: ExchangeService(_offline),
+      clock: () => _fixedNow,
+    );
+    await state.load();
+    expect(state.takeSyncError(), isNotNull); // load failed
+    expect(state.takeSyncError(), isNull); // reading clears it
+
+    await state.saveTrip(
+      name: 'ออฟไลน์',
+      destination: 'กรุงเทพ, ไทย',
+      start: DateTime(2026, 10, 1),
+      end: DateTime(2026, 10, 2),
+      budget: 1000,
+      currency: 'THB',
+    );
+    expect(state.trips.map((t) => t.name), contains('ออฟไลน์'));
+    expect(state.takeSyncError(), isNotNull);
+  });
+
   test('weather falls back to Open-Meteo and parses the forecast', () async {
     final client = MockClient((req) async {
       if (req.url.host.startsWith('geocoding')) {
         return http.Response(
-            jsonEncode({
-              'results': [
-                {'latitude': 35.6, 'longitude': 139.7}
-              ]
-            }),
-            200);
+          jsonEncode({
+            'results': [
+              {'latitude': 35.6, 'longitude': 139.7},
+            ],
+          }),
+          200,
+        );
       }
       return http.Response(
-          jsonEncode({
-            'current': {'temperature_2m': 29.4, 'weather_code': 0},
-            'daily': {
-              'time': ['2026-09-25', '2026-09-26', '2026-09-27', '2026-09-28'],
-              'temperature_2m_max': [30, 29, 24, 30],
-            },
-          }),
-          200);
+        jsonEncode({
+          'current': {'temperature_2m': 29.4, 'weather_code': 0},
+          'daily': {
+            'time': ['2026-09-25', '2026-09-26', '2026-09-27', '2026-09-28'],
+            'temperature_2m_max': [30, 29, 24, 30],
+          },
+        }),
+        200,
+      );
     });
     final w = await WeatherService(client: client).fetch('โตเกียว');
     expect(w?.temp.round(), 29);
     expect(w?.description, 'แดดจัด');
     expect(w?.next.map((d) => d.maxTemp), [29, 24, 30]);
   });
+}
+
+/// Simulates Supabase being unreachable.
+class _FailingRepository extends Repository {
+  Never _fail() => throw Exception('offline');
+
+  @override
+  Future<AppData> loadAll() async => _fail();
+  @override
+  Future<void> upsertTrip(Trip trip) async => _fail();
+  @override
+  Future<void> deleteTrip(String id) async => _fail();
+  @override
+  Future<void> upsertActivity(Activity activity) async => _fail();
+  @override
+  Future<void> deleteActivity(String id) async => _fail();
+  @override
+  Future<void> upsertExpense(Expense expense) async => _fail();
+  @override
+  Future<void> deleteExpense(String id) async => _fail();
+  @override
+  Future<void> insertAll(AppData data) async => _fail();
 }

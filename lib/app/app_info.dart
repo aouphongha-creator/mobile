@@ -17,6 +17,7 @@ class AppInfo {
     (name: 'OpenWeatherMap API', use: 'สภาพอากาศปัจจุบันและพยากรณ์ล่วงหน้า'),
     (name: 'Open-Meteo API', use: 'สภาพอากาศสำรอง (เมื่อไม่ได้ใส่ API key)'),
     (name: 'ExchangeRate-API', use: 'อัตราแลกเปลี่ยนเงินตราเป็นบาท'),
+    (name: 'Supabase', use: 'ฐานข้อมูลทริป แผนรายวัน และค่าใช้จ่าย'),
   ];
 }
 

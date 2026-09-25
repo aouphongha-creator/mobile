@@ -47,9 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
               if (trips.isEmpty)
                 const Padding(
                   padding: EdgeInsets.all(32),
-                  child: Text('ยังไม่มีทริป กด + เพื่อเพิ่มทริปใหม่',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: AppColors.textMuted)),
+                  child: Text(
+                    'ยังไม่มีทริป กด + เพื่อเพิ่มทริปใหม่',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColors.textMuted),
+                  ),
                 ),
               for (final trip in trips)
                 Padding(
@@ -65,7 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       editing: _editingId == trip.id,
                       onTap: () => widget.onOpenTrip(trip.id),
                       onEdit: () => setState(
-                          () => _editingId = _editingId == trip.id ? null : trip.id),
+                        () =>
+                            _editingId = _editingId == trip.id ? null : trip.id,
+                      ),
                       onEditDone: () => setState(() => _editingId = null),
                       onDelete: () => _delete(trip),
                     ),
@@ -77,10 +81,12 @@ class _HomeScreenState extends State<HomeScreen> {
             right: 12,
             bottom: 12,
             child: AddFab(
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                fullscreenDialog: true,
-                builder: (_) => const TripFormScreen(),
-              )),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (_) => const TripFormScreen(),
+                ),
+              ),
             ),
           ),
         ],
@@ -111,10 +117,10 @@ class _TripCard extends StatelessWidget {
   final VoidCallback onDelete;
 
   Color get _badgeColor => switch (status) {
-        TripStatus.ongoing => AppColors.statusOngoing,
-        TripStatus.planned => AppColors.statusPlanned,
-        TripStatus.done => AppColors.statusDone,
-      };
+    TripStatus.ongoing => AppColors.statusOngoing,
+    TripStatus.planned => AppColors.statusPlanned,
+    TripStatus.done => AppColors.statusDone,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -128,8 +134,13 @@ class _TripCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(trip.name,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                child: Text(
+                  trip.name,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
               EditDeleteActions(onEdit: onEdit, onDelete: onDelete),
             ],
@@ -139,16 +150,22 @@ class _TripCard extends StatelessWidget {
             const Divider(height: 16, color: AppColors.cardBorder),
             TripForm(trip: trip, compact: true, onDone: onEditDone),
           ] else ...[
-            _InfoRow(icon: Icons.location_on_outlined, label: 'ปลายทาง:', value: trip.destination),
             _InfoRow(
-                icon: Icons.calendar_month_outlined,
-                label: 'ช่วงวันที่:',
-                value: thaiRange(trip.start, trip.end)),
+              icon: Icons.location_on_outlined,
+              label: 'ปลายทาง:',
+              value: trip.destination,
+            ),
             _InfoRow(
-                icon: Icons.savings_outlined,
-                label: 'งบประมาณ:',
-                value: '${money(spent)} / ${money(trip.budget)} บาท',
-                valueColor: spent > trip.budget ? AppColors.delete : null),
+              icon: Icons.calendar_month_outlined,
+              label: 'ช่วงวันที่:',
+              value: thaiRange(trip.start, trip.end),
+            ),
+            _InfoRow(
+              icon: Icons.savings_outlined,
+              label: 'งบประมาณ:',
+              value: '${money(spent)} / ${money(trip.budget)} บาท',
+              valueColor: spent > trip.budget ? AppColors.delete : null,
+            ),
           ],
         ],
       ),
@@ -179,13 +196,21 @@ class _InfoRow extends StatelessWidget {
           const SizedBox(width: 6),
           SizedBox(
             width: 70,
-            child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+            ),
           ),
           Expanded(
-            child: Text(value,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontSize: 12, fontWeight: FontWeight.w600, color: valueColor)),
+            child: Text(
+              value,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: valueColor,
+              ),
+            ),
           ),
         ],
       ),
