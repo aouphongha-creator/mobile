@@ -75,6 +75,13 @@ String money(num value) {
   return buf.toString();
 }
 
+/// 840 / 616.8 / 1,199.1 — like [money] but keeps one decimal when needed.
+String money1(num value) {
+  final tenths = (value.abs() * 10).round();
+  final decimal = tenths % 10 == 0 ? '' : '.${tenths % 10}';
+  return '${value < 0 ? '-' : ''}${money(tenths ~/ 10)}$decimal';
+}
+
 /// 0.24 / 36.5 / 0.026 — keeps small rates readable.
 String rate(double value) =>
     value >= 0.1 ? value.toStringAsFixed(2) : value.toStringAsFixed(4);

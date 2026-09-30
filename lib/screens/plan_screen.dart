@@ -302,6 +302,7 @@ class _ActivityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final a = activity;
     return BadgeCard(
+      borderColor: null,
       padding: const EdgeInsets.fromLTRB(8, 6, 6, 8),
       badge: Pill(
         color: color,
@@ -478,14 +479,12 @@ class _ActivityFormState extends State<ActivityForm> {
     widget.onDone();
   }
 
-  InputDecoration _box(String hint) {
+  InputDecoration _box() {
     OutlineInputBorder b(Color c) => OutlineInputBorder(
       borderRadius: BorderRadius.circular(4),
       borderSide: BorderSide(color: c),
     );
     return InputDecoration(
-      hintText: hint,
-      hintStyle: const TextStyle(fontSize: 10, color: AppColors.hint),
       isDense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
       border: b(AppColors.addPlaceBorder),
@@ -531,7 +530,7 @@ class _ActivityFormState extends State<ActivityForm> {
                       TextFormField(
                         controller: _name,
                         style: fieldStyle,
-                        decoration: _box('วัดเซ็นโซจิ'),
+                        decoration: _box(),
                         validator: required,
                       ),
                     ],
@@ -550,7 +549,7 @@ class _ActivityFormState extends State<ActivityForm> {
                         style: fieldStyle,
                         readOnly: true,
                         onTap: _pickTime,
-                        decoration: _box('09:00 น.'),
+                        decoration: _box(),
                         validator: (v) =>
                             parseTime(v ?? '') == null ? 'จำเป็น' : null,
                       ),
@@ -565,7 +564,7 @@ class _ActivityFormState extends State<ActivityForm> {
             TextFormField(
               controller: _note,
               style: fieldStyle,
-              decoration: _box('ถ่ายรูปประตูคามินาริมง'),
+              decoration: _box(),
             ),
             const SizedBox(height: 10),
             CancelSaveRow(

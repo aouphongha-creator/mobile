@@ -72,6 +72,39 @@ void main() {
     );
   });
 
+  testWidgets('expense page adds, converts and deletes an item', (
+    tester,
+  ) async {
+    await _pumpApp(tester, _state());
+
+    await tester.tap(find.text('History'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.add).first);
+    await tester.pumpAndSettle();
+    expect(find.text('บันทึกรายการค่าใช้จ่าย'), findsOneWidget);
+    expect(find.text('ลบ'), findsNothing);
+
+    await tester.enterText(find.byType(TextFormField).first, '5,000');
+    await tester.enterText(find.byType(TextFormField).last, 'ค่าบุฟเฟ่ต์');
+    await tester.pump();
+    expect(find.text('ระบบคำนวณให้อัตโนมัติ (≈ 1,200 THB)'), findsOneWidget);
+    expect(find.text('${'ค่าบุฟเฟ่ต์'.characters.length}/100'), findsOneWidget);
+
+    await tester.tap(find.text('บันทึก'));
+    await tester.pumpAndSettle();
+    expect(find.text('ประวัติค่าใช้จ่าย'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('ค่าบุฟเฟ่ต์'), 200);
+    expect(find.textContaining('5,000 JPY'), findsWidgets);
+
+    await tester.tap(find.text('ค่าบุฟเฟ่ต์'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('ลบ'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(TextButton, 'ลบ'));
+    await tester.pumpAndSettle();
+    expect(find.text('ค่าบุฟเฟ่ต์'), findsNothing);
+  });
+
   test('trip status follows the dates', () {
     final trip = Trip(
       id: 'x',

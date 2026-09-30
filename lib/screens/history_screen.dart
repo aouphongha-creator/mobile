@@ -4,7 +4,7 @@ import '../app/theme.dart';
 import '../models/models.dart';
 import '../state/app_state.dart';
 import '../utils/format.dart';
-import '../widgets/expense_sheet.dart';
+import 'expense_form_screen.dart';
 import '../widgets/ui.dart';
 
 /// "ประวัติค่าใช้จ่าย" — expenses of the selected trip grouped by day.
@@ -109,7 +109,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             children: [
               Icon(Icons.filter_list_rounded, size: 16),
               SizedBox(width: 6),
-              Text('กรองตามหมวด', style: TextStyle(fontSize: 11)),
+              Text('กรองรายการ:', style: TextStyle(fontSize: 11)),
             ],
           ),
           const SizedBox(height: 6),
@@ -192,8 +192,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
                 const Spacer(),
                 AddDot(
-                  onTap: () =>
-                      showExpenseSheet(context, trip: trip, day: g.day),
+                  onTap: () => openExpenseForm(context, trip: trip, day: g.day),
                 ),
               ],
             ),
@@ -214,7 +213,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   currency: trip.currency,
                   thb: e.amount * rateThb,
                   onEdit: () =>
-                      showExpenseSheet(context, trip: trip, expense: e),
+                      openExpenseForm(context, trip: trip, expense: e),
                 ),
               ),
           ],
@@ -295,7 +294,7 @@ class _ExpenseCard extends StatelessWidget {
                 ),
                 if (currency != 'THB')
                   TextSpan(
-                    text: '   (≈ ${money(thb)} THB)',
+                    text: '   (≈ ${money1(thb)} THB)',
                     style: const TextStyle(fontSize: 10),
                   ),
               ],

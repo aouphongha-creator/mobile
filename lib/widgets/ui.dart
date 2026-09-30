@@ -156,7 +156,9 @@ class BadgeCard extends StatelessWidget {
   final Widget? badge;
   final VoidCallback? onTap;
   final EdgeInsets padding;
-  final Color borderColor;
+
+  /// Outline colour; null draws the card without a border.
+  final Color? borderColor;
 
   static const badgeOverlap = 10.0;
 
@@ -166,7 +168,9 @@ class BadgeCard extends StatelessWidget {
       color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: borderColor, width: 1.2),
+        side: borderColor == null
+            ? BorderSide.none
+            : BorderSide(color: borderColor!, width: 1.2),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -348,12 +352,14 @@ class AddDot extends StatelessWidget {
   }
 }
 
-/// Cancel (pink) / Save (green) button pair.
+/// Cancel (pink) / Save (green) button pair, with an optional red-outlined
+/// Delete in between.
 class CancelSaveRow extends StatelessWidget {
   const CancelSaveRow({
     super.key,
     required this.onCancel,
     required this.onSave,
+    this.onDelete,
     this.height = 40,
     this.radius = 20,
     this.fontSize = 13,
@@ -362,6 +368,7 @@ class CancelSaveRow extends StatelessWidget {
 
   final VoidCallback onCancel;
   final VoidCallback? onSave;
+  final VoidCallback? onDelete;
   final double height;
   final double radius;
   final double fontSize;
@@ -383,6 +390,20 @@ class CancelSaveRow extends StatelessWidget {
           ),
         ),
         SizedBox(width: gap),
+        if (onDelete != null) ...[
+          Expanded(
+            child: _ToneButton(
+              label: 'ลบ',
+              bg: Colors.transparent,
+              border: AppColors.delete,
+              onTap: onDelete,
+              height: height,
+              radius: radius,
+              fontSize: fontSize,
+            ),
+          ),
+          SizedBox(width: gap),
+        ],
         Expanded(
           child: _ToneButton(
             label: 'บันทึก',
