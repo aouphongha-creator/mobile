@@ -97,3 +97,15 @@ select
 from public.activities a
 join public.trips t on t.id = a.trip_id
 order by t.name, a.date, a.minutes;
+
+-- Activity photos: a public Storage bucket, one object per activity id.
+-- The app stores the object's public URL in activities.image_path.
+insert into storage.buckets (id, name, public)
+values ('activity-images', 'activity-images', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "shared activity images" on storage.objects;
+create policy "shared activity images" on storage.objects
+  for all to anon, authenticated
+  using (bucket_id = 'activity-images')
+  with check (bucket_id = 'activity-images');

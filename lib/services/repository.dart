@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/models.dart';
@@ -24,6 +25,12 @@ abstract class Repository {
 
   Future<void> upsertActivity(Activity activity);
   Future<void> deleteActivity(String id);
+
+  /// Stores a photo picked for an activity and returns what to keep in
+  /// [Activity.imagePath]. By default that is the picked file's own path,
+  /// which only this device can open.
+  Future<String> saveActivityImage(String activityId, XFile file) async =>
+      file.path;
 
   Future<void> upsertExpense(Expense expense);
   Future<void> deleteExpense(String id);

@@ -44,7 +44,7 @@ class _PlanScreenState extends State<PlanScreen> {
       imageQuality: 80,
     );
     if (file != null && mounted) {
-      await AppScope.read(context).setActivityImage(a.id, file.path);
+      await AppScope.read(context).setActivityImage(a.id, file);
     }
   }
 

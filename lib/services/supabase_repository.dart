@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/models.dart';
@@ -11,6 +12,9 @@ class SupabaseRepository extends Repository {
   SupabaseRepository(this._db);
 
   final SupabaseClient _db;
+
+  /// Public Storage bucket for activity photos, one object per activity id.
+  static const _images = 'activity-images';
 
   @override
   Future<AppData> loadAll() async {
@@ -39,8 +43,28 @@ class SupabaseRepository extends Repository {
       _db.from('activities').upsert(_activityToRow(a));
 
   @override
-  Future<void> deleteActivity(String id) =>
-      _db.from('activities').delete().eq('id', id);
+  Future<void> deleteActivity(String id) async {
+    await _db.from('activities').delete().eq('id', id);
+    // Best effort: a leftover photo does no harm.
+    await _db.storage.from(_images).remove([id]).then((_) {}, onError: (_) {});
+  }
+
+  /// Uploads the photo so every device can load it by URL.
+  @override
+  Future<String> saveActivityImage(String activityId, XFile file) async {
+    final bucket = _db.storage.from(_images);
+    await bucket.uploadBinary(
+      activityId,
+      await file.readAsBytes(),
+      fileOptions: FileOptions(
+        upsert: true,
+        contentType: file.mimeType ?? 'image/jpeg',
+      ),
+    );
+    // The object name never changes, so version the URL to skip stale caches.
+    final version = DateTime.now().millisecondsSinceEpoch;
+    return '${bucket.getPublicUrl(activityId)}?v=$version';
+  }
 
   @override
   Future<void> upsertExpense(Expense e) =>

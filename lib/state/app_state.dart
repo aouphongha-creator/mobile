@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../app/app_info.dart';
 import '../models/models.dart';
@@ -207,13 +208,22 @@ class AppState extends ChangeNotifier {
     await _sync(() => _repo.upsertActivity(activity));
   }
 
-  Future<void> setActivityImage(String id, String path) async {
-    final i = _activities.indexWhere((a) => a.id == id);
-    if (i < 0) return;
-    final activity = _activities[i].copyWith(imagePath: path);
-    _activities[i] = activity;
-    notifyListeners();
-    await _sync(() => _repo.upsertActivity(activity));
+  /// Shows the picked photo at once, then stores it through the repository
+  /// (Supabase Storage when online) and saves the resulting path/URL.
+  Future<void> setActivityImage(String id, XFile file) async {
+    Activity? apply(String path) {
+      final i = _activities.indexWhere((a) => a.id == id);
+      if (i < 0) return null;
+      _activities[i] = _activities[i].copyWith(imagePath: path);
+      notifyListeners();
+      return _activities[i];
+    }
+
+    if (apply(file.path) == null) return;
+    await _sync(() async {
+      final saved = apply(await _repo.saveActivityImage(id, file));
+      if (saved != null) await _repo.upsertActivity(saved);
+    });
   }
 
   Future<void> deleteActivity(String id) async {
